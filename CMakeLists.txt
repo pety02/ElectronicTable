@@ -3,4 +3,9 @@ project(ElectronicTable)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(ElectronicTable main.cpp)
+add_executable(ElectronicTable main.cpp
+        Types.h
+        Table.h
+        CmdInterpreter.h
+        ExpressionParser.h
+        Tokenizer.h)
