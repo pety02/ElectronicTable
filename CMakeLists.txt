@@ -8,4 +8,5 @@ add_executable(ElectronicTable main.cpp
         Table.h
         CmdInterpreter.h
         ExpressionParser.h
-        Tokenizer.h)
+        Tokenizer.h
+        Table.cpp)
