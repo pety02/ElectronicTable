@@ -8,23 +8,40 @@
 #include <cstdint>
 #include <string>
 
+/**
+ *
+ */
 struct Coordinates {
   int64_t row;
   int64_t col;
 };
 
+/**
+ *
+ */
 struct Area {
     Coordinates from;
     Coordinates to;
 };
 
+/**
+ *
+ */
 struct Cell {
     std::string expression;
-    bool cacheable = false;
-    double cachedValue = 0.0;
+    double cachedValue;
     Coordinates coords;
+
+    Cell(const std::string &expression, const Coordinates coords) {
+        this->expression = expression;
+        this->coords = coords;
+        cachedValue = 0.0;
+    }
 };
 
+/**
+ *
+ */
 enum TokenType {
     Number,
     Identifier,
@@ -34,6 +51,9 @@ enum TokenType {
     End
 };
 
+/**
+ *
+ */
 struct Token {
     TokenType type;
     std::string text;

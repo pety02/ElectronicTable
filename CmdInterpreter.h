@@ -7,9 +7,23 @@
 
 #include "Table.h"
 
+/**
+ *
+ */
 class CmdInterpreter {
 public:
+  /**
+   *
+   * @param fileName
+   * @param table
+   */
   static void save(std::string fileName, const Table& table);
+
+  /**
+   *
+   * @param fileName
+   * @param table
+   */
   static void load(std::string fileName, Table& table);
 };
 

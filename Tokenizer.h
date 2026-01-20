@@ -7,12 +7,24 @@
 
 #include "Types.h"
 
+/**
+ *
+ */
 class Tokenizer {
     const std::string& input;
     size_t pos = 0;
 
 public:
+    /**
+     *
+     * @param s
+     */
     Tokenizer(const std::string& s);
+
+    /**
+     *
+     * @return
+     */
     Token next();
 };
 
