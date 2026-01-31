@@ -24,6 +24,15 @@ class ExpressionParser {
 
 public:
     /**
+     * 
+     * @param tokenizer 
+     * @param token 
+     * @param table 
+     * @param currentCellCoordinates 
+     */
+    ExpressionParser(const Tokenizer& tokenizer, const Token& token,
+                     const Table& table, const Coordinates& currentCellCoordinates);
+    /**
      *
      * @param expression
      * @param table
