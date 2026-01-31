@@ -99,7 +99,7 @@ enum TokenType {
     Comma, // the comma that is stored in the expression
     Equal, NotEqual, Less, Greater, // the comparison operator value that is stored in the expression (==, !=, < or >)
     Identifier, // the identifier value that is stored in the expression
-    CellRef // the cell reference that is stored in the expression (ex: R1C2, R[0]C5, R5C[0], R[-1]C10, R10C[-1] and so on)
+    CellRef, // the cell reference that is stored in the expression (ex: R1C2, R[0]C5, R5C[0], R[-1]C10, R10C[-1] and so on)
 };
 
 /**
