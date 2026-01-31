@@ -19,7 +19,7 @@ public:
   * @param fileName The name of the output file.
   * @param table The table whose contents will be saved.
   */
- static void save(std::string fileName, const Table& table);
+ static void save(const std::string &fileName, const Table& table);
 
  /**
   * Loads table contents from a CSV file.
