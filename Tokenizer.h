@@ -5,21 +5,52 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
+#include <optional>
+
 #include "Types.h"
 
 /**
  *
  */
 class Tokenizer {
-    const std::string& input;
-    size_t pos = 0;
+    const std::string &input;
+    size_t pos;
+
+    /**
+     *
+     */
+    void skipWhitespace();
+
+    /**
+     *
+     * @return
+     */
+    std::optional<Token> tokenizeNumber();
+
+    /**
+     *
+     * @return
+     */
+    std::optional<Token> tokenizeCellReference();
+
+    /**
+     *
+     * @return
+     */
+    std::optional<Token> tokenizeIdentifier();
+
+    /**
+     *
+     * @return
+     */
+    Token tokenizeOperator();
 
 public:
     /**
      *
-     * @param s
+     * @param input
      */
-    Tokenizer(const std::string& s);
+    Tokenizer(const std::string &input);
 
     /**
      *
@@ -27,5 +58,6 @@ public:
      */
     Token next();
 };
+
 
 #endif //TOKENIZER_H
