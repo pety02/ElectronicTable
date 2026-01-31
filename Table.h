@@ -7,6 +7,7 @@
 
 #include "Types.h"
 #include <unordered_map>
+#include <stdexcept>
 
 /**
  *
@@ -16,15 +17,28 @@ private:
     std::unordered_map<uint64_t, Cell> cells;
     Coordinates focusedCoords;
 
-  /**
-   *
-   * @param r
-   * @param c
-   * @return
-   */
+public:
+    /**
+     *
+     * @param r
+     * @param c
+     * @return
+     */
     static uint64_t makeKey(int64_t r, int64_t c);
 
+private:
+    /**
+    *
+    * @return
+    */
+    std::pair<int64_t, int64_t> findTableBounds() const;
+
 public:
+    /**
+     *
+     */
+    Table();
+
     /**
      *
      * @param coords
@@ -75,7 +89,7 @@ public:
      * @param rightCell
      * @return
      */
-    double count(Coordinates leftCell, Coordinates rightCell) const;
+    int count(Coordinates leftCell, Coordinates rightCell) const;
 
     /**
      *
@@ -100,6 +114,12 @@ public:
      * @return
      */
     double avg(Coordinates leftCell, Coordinates rightCell) const;
+
+    /**
+     *
+     * @return
+     */
+    const std::unordered_map<uint64_t, Cell> getCells() const;
 };
 
 #endif //TABLE_H
