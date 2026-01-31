@@ -3,3 +3,11 @@
 //
 
 #include "CmdInterpreter.h"
+
+void CmdInterpreter::save(std::string fileName, const Table& table) {
+    // TODO: to implement it
+}
+
+void CmdInterpreter::load(std::string fileName, Table& table) {
+    // TODO: to implement it
+}
