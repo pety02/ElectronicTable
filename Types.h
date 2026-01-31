@@ -12,8 +12,16 @@
  *
  */
 struct Coordinates {
-  int64_t row;
-  int64_t col;
+    int64_t row;
+    int64_t col;
+
+    /**
+     *
+     * @param row
+     * @param col
+     */
+    Coordinates(int64_t row = 0, int64_t col = 0) : row(row), col(col) {
+    }
 };
 
 /**
@@ -22,6 +30,30 @@ struct Coordinates {
 struct Area {
     Coordinates from;
     Coordinates to;
+
+    /**
+     *
+     * @param from
+     * @param to
+     */
+    Area(Coordinates from, Coordinates to = Coordinates()) : from(from), to(to) {
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    int64_t maxRow() const {
+        return std::max(from.row, to.row);
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    int64_t maxCol() const {
+        return std::max(from.col, to.col);
+    }
 };
 
 /**
@@ -32,10 +64,13 @@ struct Cell {
     double cachedValue;
     Coordinates coords;
 
-    Cell(const std::string &expression, const Coordinates coords) {
-        this->expression = expression;
-        this->coords = coords;
-        cachedValue = 0.0;
+    /**
+     * 
+     * @param expression 
+     * @param coords 
+     */
+    Cell(const std::string &expression, const Coordinates coords) : expression(expression),
+                                                                    cachedValue(0), coords(coords) {
     }
 };
 
@@ -43,12 +78,14 @@ struct Cell {
  *
  */
 enum TokenType {
+    End,
     Number,
-    Identifier,
-    Operator,
+    Plus, Minus, Mul, Div, Mod,
     LParen, RParen,
     Comma,
-    End
+    Equal, NotEqual, Less, Greater,
+    Identifier, // functions: sum, if, etc.
+    CellRef // RxCy with absolute / relative parts
 };
 
 /**
@@ -56,7 +93,15 @@ enum TokenType {
  */
 struct Token {
     TokenType type;
-    std::string text;
+    std::string lexeme;
+
+    /**
+     *
+     * @param type
+     * @param lexeme
+     */
+    Token(const TokenType type, const std::string &lexeme) : type(type), lexeme(lexeme) {
+    }
 };
 
 #endif //TYPES_H
