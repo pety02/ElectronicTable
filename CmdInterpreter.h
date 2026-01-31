@@ -8,23 +8,26 @@
 #include "Table.h"
 
 /**
- *
+ * CmdInterpreter handles file-based input and output operations
+ * for saving and loading the table contents.
  */
 class CmdInterpreter {
 public:
-  /**
-   *
-   * @param fileName
-   * @param table
-   */
-  static void save(std::string fileName, const Table& table);
+ /**
+  * Saves the contents of the table to a file in CSV format.
+  *
+  * @param fileName The name of the output file.
+  * @param table The table whose contents will be saved.
+  */
+ static void save(std::string fileName, const Table& table);
 
-  /**
-   *
-   * @param fileName
-   * @param table
-   */
-  static void load(std::string fileName, Table& table);
+ /**
+  * Loads table contents from a CSV file.
+  *
+  * @param fileName The name of the input file.
+  * @param table The table into which the contents will be loaded.
+  */
+ static void load(std::string fileName, Table& table);
 };
 
 #endif //CMD_INTERPRETER_H
