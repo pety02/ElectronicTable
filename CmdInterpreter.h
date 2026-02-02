@@ -27,7 +27,7 @@ public:
   * @param fileName The name of the input file.
   * @param table The table into which the contents will be loaded.
   */
- static void load(std::string fileName, Table& table);
+ static void load(const std::string& fileName, Table& table);
 };
 
 #endif //CMD_INTERPRETER_H

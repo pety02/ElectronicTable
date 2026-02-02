@@ -5,10 +5,6 @@
 #include "Table.h"
 #include <iostream>
 
-uint64_t Table::makeKey(int64_t r, int64_t c) {
-     return r << 32 | c;
-}
-
 std::pair<int64_t, int64_t> Table::findTableBounds() const {
     int64_t maxRow = 0;
     int64_t maxCol = 0;
@@ -21,7 +17,7 @@ std::pair<int64_t, int64_t> Table::findTableBounds() const {
     return {maxRow, maxCol};
 }
 
-Table::Table() : cells(std::unordered_map<uint64_t, Cell>()), focusedCoords(Coordinates()) {}
+Table::Table() : cells(std::unordered_map<Coordinates, Cell, Hash>()), focusedCoords(Coordinates()) {}
 
 void Table::set(Coordinates coords, const std::string &expression) {
   if(coords.row < 0 || coords.col < 0) {
@@ -32,20 +28,20 @@ void Table::set(Coordinates coords, const std::string &expression) {
       this->focusedCoords.col = coords.col;
   }
 
-  this->cells[Table::makeKey(this->focusedCoords.row, this->focusedCoords.col)] = Cell(expression, this->focusedCoords);
+  this->cells[this->focusedCoords] = Cell(expression, this->focusedCoords);
 }
 
 std::string Table::get(Coordinates coords) const {
-  return this->cells.at(Table::makeKey(coords.row, coords.col)).expression;
+  return this->cells.at(coords).expression;
 }
 
-void Table::printVal(Area area) const {
+void Table::printVal(const Area &area) const {
     int64_t maxRow = area.maxRow();
     int64_t maxCol = area.maxCol();
 
     for (int64_t r = 0; r <= maxRow; ++r) {
         for (int64_t c = 0; c <= maxCol; ++c) {
-            uint64_t key = makeKey(r, c);
+            Coordinates key = {r, c};
             auto it = cells.find(key);
 
             if (it != cells.end()) {
@@ -60,13 +56,13 @@ void Table::printVal(Area area) const {
     }
 }
 
-void Table::printExpression(Area area) const {
+void Table::printExpression(const Area &area) const {
     int64_t maxRow = area.maxRow();
     int64_t maxCol = area.maxCol();
 
     for (int64_t r = 0; r <= maxRow; ++r) {
         for (int64_t c = 0; c <= maxCol; ++c) {
-            uint64_t key = makeKey(r, c);
+            Coordinates key = {r, c};
             auto it = cells.find(key);
 
             if (it != cells.end()) {
@@ -88,13 +84,13 @@ void Table::printValAll() const {
 
     // Find table bounds
     std::pair<int64_t, int64_t> bounds = this->findTableBounds();
-    int maxRow = bounds.first;
-    int maxCol = bounds.second;
+    int64_t maxRow = bounds.first;
+    int64_t maxCol = bounds.second;
 
     // Print row by row
     for (int64_t r = 0; r <= maxRow; ++r) {
         for (int64_t c = 0; c <= maxCol; ++c) {
-            uint64_t key = makeKey(r, c);
+            Coordinates key = {r, c};
             auto it = cells.find(key);
 
             if (it != cells.end()) {
@@ -116,13 +112,13 @@ void Table::printExpressionAll() const {
 
     // Find table bounds
     std::pair<int64_t, int64_t> bounds = this->findTableBounds();
-    int maxRow = bounds.first;
-    int maxCol = bounds.second;
+    int64_t maxRow = bounds.first;
+    int64_t maxCol = bounds.second;
 
     // Print row by row
     for (int64_t r = 0; r <= maxRow; ++r) {
         for (int64_t c = 0; c <= maxCol; ++c) {
-            uint64_t key = makeKey(r, c);
+            Coordinates key = {r, c};
             auto it = cells.find(key);
 
             if (it != cells.end()) {
@@ -138,8 +134,8 @@ void Table::printExpressionAll() const {
 }
 
 double Table::sum(Coordinates leftCell, Coordinates rightCell) const {
-    return this->cells.at(Table::makeKey(leftCell.row, leftCell.col)).cachedValue
-    + this->cells.at(Table::makeKey(rightCell.row, rightCell.col)).cachedValue;
+    return this->cells.at(leftCell).cachedValue
+    + this->cells.at(rightCell).cachedValue;
 }
 
 int Table::count(Coordinates leftCell, Coordinates rightCell) const {
@@ -151,9 +147,10 @@ int Table::count(Coordinates leftCell, Coordinates rightCell) const {
     }
 
     int counter = 0;
-    for(int i = leftCell.row; i < rightCell.row; ++i) {
-        for (int j = leftCell.col; j < rightCell.col; ++j) {
-            if(!this->cells.at(Table::makeKey(i, j)).expression.empty()) {
+    for(int64_t i = leftCell.row; i < rightCell.row; ++i) {
+        for (int64_t j = leftCell.col; j < rightCell.col; ++j) {
+            Coordinates currentCell = {i, j};
+            if(!this->cells.at(currentCell).expression.empty()) {
                 counter++;
             }
         }
@@ -163,8 +160,8 @@ int Table::count(Coordinates leftCell, Coordinates rightCell) const {
 }
 
 double Table::min(Coordinates leftCell, Coordinates rightCell) const {
-    const double left = this->cells.at(Table::makeKey(leftCell.row, leftCell.col)).cachedValue;
-    const double right = this->cells.at(Table::makeKey(rightCell.row, rightCell.col)).cachedValue;
+    const double left = this->cells.at(leftCell).cachedValue;
+    const double right = this->cells.at(rightCell).cachedValue;
 
     if (left < right)
         return left;
@@ -173,8 +170,8 @@ double Table::min(Coordinates leftCell, Coordinates rightCell) const {
 }
 
 double Table::max(Coordinates leftCell, Coordinates rightCell) const {
-    const double left = this->cells.at(Table::makeKey(leftCell.row, leftCell.col)).cachedValue;
-    const double right = this->cells.at(Table::makeKey(rightCell.row, rightCell.col)).cachedValue;
+    const double left = this->cells.at(leftCell).cachedValue;
+    const double right = this->cells.at(rightCell).cachedValue;
 
     if (left > right)
         return left;
@@ -183,12 +180,12 @@ double Table::max(Coordinates leftCell, Coordinates rightCell) const {
 }
 
 double Table::avg(Coordinates leftCell, Coordinates rightCell) const {
-    const double left = this->cells.at(Table::makeKey(leftCell.row, leftCell.col)).cachedValue;
-    const double right = this->cells.at(Table::makeKey(rightCell.row, rightCell.col)).cachedValue;
+    const double left = this->cells.at(leftCell).cachedValue;
+    const double right = this->cells.at(rightCell).cachedValue;
 
     return (left + right) / 2;
 }
 
-const std::unordered_map<uint64_t, Cell> Table::getCells() const {
+std::unordered_map<Coordinates, Cell, Hash> Table::getCells() const {
     return this->cells;
 }

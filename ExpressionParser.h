@@ -36,7 +36,7 @@ public:
      * @param table The table used to resolve cell references.
      * @param currentCellCoordinates The coordinates of the currently evaluated cell.
      */
-    ExpressionParser(const Tokenizer &tokenizer, const Token &token,
+    ExpressionParser(const Tokenizer &tokenizer, Token token,
                      const Table &table, const Coordinates &currentCellCoordinates);
 
     /**
@@ -55,17 +55,17 @@ public:
     /**
      * Checks whether a cell exists at the given coordinates.
      */
-    bool hasCell(Coordinates c) const;
+    [[nodiscard]] bool hasCell(Coordinates c) const;
 
     /**
      * Retrieves the value of the cell at the given coordinates.
      */
-    double getValue(Coordinates c) const;
+    [[nodiscard]] double getValue(Coordinates c) const;
 
     /**
      * Retrieves the expression stored in the cell at the given coordinates.
      */
-    const std::string &getExpression(Coordinates c) const;
+    [[nodiscard]] const std::string &getExpression(Coordinates c) const;
 
 private:
     /**

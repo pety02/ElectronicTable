@@ -4,15 +4,16 @@
 
 #include "ExpressionParser.h"
 #include <cmath>
+#include <utility>
 
 void ExpressionParser::advance() {
     this->currentToken = this->tokenizer.next();
 }
 
-ExpressionParser::ExpressionParser(const Tokenizer &tokenizer, const Token &token,
+ExpressionParser::ExpressionParser(const Tokenizer &tokenizer, Token token,
                                    const Table &table,
                                    const Coordinates &currentCellCoordinates) : tokenizer(tokenizer),
-    currentToken(token), table(table), currentCellCoordinates(currentCellCoordinates) {
+    currentToken(std::move(token)), table(table), currentCellCoordinates(currentCellCoordinates) {
 }
 
 double ExpressionParser::evaluate(const std::string &expression,
@@ -34,16 +35,15 @@ double ExpressionParser::evaluate(const std::string &expression,
 }
 
 bool ExpressionParser::hasCell(Coordinates c) const {
-    uint64_t key = Table::makeKey(c.row, c.col);
-    return this->table.getCells().find(key) != table.getCells().end();
+    return this->table.getCells().find(c) != table.getCells().end();
 }
 
 double ExpressionParser::getValue(Coordinates c) const {
-    return this->table.getCells().at(Table::makeKey(c.row, c.col)).cachedValue;
+    return this->table.getCells().at(c).cachedValue;
 }
 
 const std::string &ExpressionParser::getExpression(Coordinates c) const {
-    return this->table.getCells().at(Table::makeKey(c.row, c.col)).expression;
+    return this->table.getCells().at(c).expression;
 }
 
 double ExpressionParser::parseExpression() {

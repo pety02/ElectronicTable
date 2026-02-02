@@ -5,6 +5,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <chrono>
 #include <cstdint>
 #include <string>
 
@@ -28,6 +29,43 @@ struct Coordinates {
    * @param col The column coordinate (default: 0)
    */
     Coordinates(int64_t row = 0, int64_t col = 0) : row(row), col(col) {
+    }
+
+    /**
+     *
+     * @param other
+     * @return
+     */
+    bool operator==(const Coordinates &other) const {
+        return row == other.row && col == other.col;
+    }
+};
+
+/**
+ *
+ */
+struct Hash {
+
+    /**
+     *
+     * @param x
+     * @return
+     */
+    static uint64_t splitmix64(uint64_t x) {
+        // http://xorshift.di.unimi.it/splitmix64.c
+        x += 0x9e3779b97f4a7c15;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+        return x ^ (x >> 31);
+    }
+
+    size_t operator()(const Coordinates& c) const {
+        static const uint64_t FIXED_RANDOM =
+            std::chrono::steady_clock::now().time_since_epoch().count();
+
+        uint64_t h1 = Hash::splitmix64(c.row + FIXED_RANDOM);
+        uint64_t h2 = Hash::splitmix64(c.col + FIXED_RANDOM);
+        return h1 ^ (h2 << 1);
     }
 };
 
@@ -85,7 +123,8 @@ struct Cell {
      * @param coords the coordinates of the cell
      */
     Cell(const std::string &expression, const Coordinates coords) : expression(expression),
-                                                                    cachedValue(0), coords(coords) {}
+                                                                    cachedValue(0), coords(coords) {
+    }
 };
 
 /**
@@ -99,7 +138,8 @@ enum TokenType {
     Comma, // the comma that is stored in the expression
     Equal, NotEqual, Less, Greater, // the comparison operator value that is stored in the expression (==, !=, < or >)
     Identifier, // the identifier value that is stored in the expression
-    CellRef, // the cell reference that is stored in the expression (ex: R1C2, R[0]C5, R5C[0], R[-1]C10, R10C[-1] and so on)
+    CellRef,
+    // the cell reference that is stored in the expression (ex: R1C2, R[0]C5, R5C[0], R[-1]C10, R10C[-1] and so on)
 };
 
 /**

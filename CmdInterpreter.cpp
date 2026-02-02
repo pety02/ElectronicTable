@@ -27,7 +27,8 @@ void CmdInterpreter::save(const std::string &fileName, const Table& table) {
 
     for (int64_t r = 0; r <= maxRow; ++r) {
         for (int64_t c = 0; c <= maxCol; ++c) {
-            auto it = cells.find(Table::makeKey(r, c));
+            Coordinates key = {r, c};
+            auto it = cells.find(key);
             if (it != cells.end()) {
                 out << it->second.expression;
             }
@@ -40,7 +41,7 @@ void CmdInterpreter::save(const std::string &fileName, const Table& table) {
     }
 }
 
-void CmdInterpreter::load(std::string fileName, Table& table) {
+void CmdInterpreter::load(const std::string& fileName, Table& table) {
     std::ifstream in(fileName);
     if (!in.is_open()) {
         throw std::runtime_error("Cannot open file for reading");

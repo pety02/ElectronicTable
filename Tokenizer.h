@@ -6,7 +6,6 @@
 #define TOKENIZER_H
 
 #include <optional>
-
 #include "Types.h"
 
 /**
@@ -72,7 +71,7 @@ public:
      *
      * @param input The string expression to be tokenized.
      */
-    Tokenizer(const std::string &input);
+    explicit Tokenizer(const std::string &input);
 
     /**
      * Returns the next token from the input expression.

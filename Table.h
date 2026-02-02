@@ -7,7 +7,6 @@
 
 #include "Types.h"
 #include <unordered_map>
-#include <stdexcept>
 
 /**
  * Represents a sparse rectangular table of cells.
@@ -17,20 +16,9 @@
  */
 class Table {
 private:
-    std::unordered_map<uint64_t, Cell> cells;
+    std::unordered_map<Coordinates, Cell, Hash> cells;
     Coordinates focusedCoords;
 
-public:
-    /**
-     * Generates a unique key for a cell based on its row and column.
-     *
-     * @param r The row coordinate.
-     * @param c The column coordinate.
-     * @return A unique 64-bit key representing the cell position.
-     */
-    static uint64_t makeKey(int64_t r, int64_t c);
-
-private:
     /**
      * Finds the minimum bounding rectangle that contains all non-empty cells
      * in the table.
@@ -69,14 +57,14 @@ public:
      *
      * @param area The rectangular area to print.
      */
-    void printVal(Area area) const;
+    void printVal(const Area &area) const;
 
     /**
      * Prints the expressions of all cells within the given area.
      *
      * @param area The rectangular area to print.
      */
-    void printExpression(Area area) const;
+    void printExpression(const Area &area) const;
 
     /**
      * Prints the values of all cells in the table, formatted by rows.
@@ -122,7 +110,7 @@ public:
      *
      * @return A constant reference to the internal cell map.
      */
-    const std::unordered_map<uint64_t, Cell> getCells() const;
+    std::unordered_map<Coordinates, Cell, Hash> getCells() const;
 };
 
 #endif //TABLE_H
