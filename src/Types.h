@@ -150,6 +150,11 @@ struct Cell {
     Coordinates coords;     ///< Cell position
 
     /**
+     * @brief Constructs a Cell with default values.
+     */
+    Cell() : expression(""), coords({0,0}), cachedValue(0.0) {}
+
+    /**
      * @brief Constructs a Cell.
      *
      * The cached value is initialized to 0.0 and is expected
@@ -166,6 +171,7 @@ struct Cell {
  * @brief Token types used during expression tokenization.
  */
 enum TokenType {
+    Start,
     End,        ///< End of input
     Number,     ///< Numeric literal
     Plus,       ///< '+'
@@ -191,14 +197,16 @@ struct Token {
     TokenType type;     ///< Token category
     std::string lexeme; ///< Raw token text
 
+    Token() : type(Start), lexeme("") {}
+
     /**
      * @brief Constructs a Token.
      *
      * @param type Token type
      * @param lexeme Token text as it appears in the expression
      */
-    Token(TokenType type, const std::string& lexeme)
-        : type(type), lexeme(lexeme) {}
+    Token(TokenType type, std::string  lexeme)
+        : type(type), lexeme(std::move(lexeme)) {}
 };
 
 #endif // TYPES_H
