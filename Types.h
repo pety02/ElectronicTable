@@ -8,99 +8,128 @@
 #include <chrono>
 #include <cstdint>
 #include <string>
+#include <algorithm>
 
 /**
- * Represents the coordinates of the tables' cells as containing the
- * positions of a cell by the axis (row) and ordinate (col).
+ * @brief Represents a position in a table.
+ *
+ * A coordinate consists of a row index and a column index.
+ * Rows and columns are zero-based unless specified otherwise
+ * by the surrounding logic.
  */
 struct Coordinates {
-    int64_t row;
-    int64_t col;
+    int64_t row; ///< Row index
+    int64_t col; ///< Column index
 
     /**
-   * Constructs a Coordinates object.
-   *
-   * The constructor uses default arguments, allowing the following forms:
-   * - No arguments: initializes both row and col to 0
-   * - One argument: initializes row, col is set to 0
-   * - Two arguments: initializes both row and col
-   *
-   * @param row The row coordinate (default: 0)
-   * @param col The column coordinate (default: 0)
-   */
-    Coordinates(int64_t row = 0, int64_t col = 0) : row(row), col(col) {
-    }
-
-    /**
+     * @brief Constructs a Coordinates object.
      *
-     * @param other
-     * @return
+     * Supported forms:
+     * - Coordinates()            -> (0, 0)
+     * - Coordinates(row)         -> (row, 0)
+     * - Coordinates(row, col)    -> (row, col)
+     *
+     * @param row Row index (default: 0)
+     * @param col Column index (default: 0)
      */
-    bool operator==(const Coordinates &other) const {
+    Coordinates(int64_t row = 0, int64_t col = 0)
+        : row(row), col(col) {}
+
+    /**
+     * @brief Equality comparison operator.
+     *
+     * @param other Another Coordinates object
+     * @return true if both row and column are equal
+     */
+    bool operator==(const Coordinates& other) const {
         return row == other.row && col == other.col;
     }
 };
 
 /**
+ * @brief Hash functor for Coordinates.
  *
+ * Intended for use with unordered containers
+ * (e.g., std::unordered_map, std::unordered_set).
  */
 struct Hash {
 
     /**
+     * @brief SplitMix64 hash function.
      *
-     * @param x
-     * @return
+     * Produces a high-quality 64-bit hash from a 64-bit input.
+     * Based on the reference implementation - written in 2015
+     * by Sebastiano Vigna (vigna@acm.org):
+     * http://xorshift.di.unimi.it/splitmix64.c
+     *
+     * @param x Input value
+     * @return Hashed value
      */
     static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
         x += 0x9e3779b97f4a7c15;
         x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
         x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
         return x ^ (x >> 31);
     }
 
+    /**
+     * @brief Computes a hash value for Coordinates.
+     *
+     * A fixed random seed is used to reduce hash collision
+     * attacks and improve distribution.
+     *
+     * @param c Coordinates to hash
+     * @return Hash value
+     */
     size_t operator()(const Coordinates& c) const {
         static const uint64_t FIXED_RANDOM =
             std::chrono::steady_clock::now().time_since_epoch().count();
 
-        uint64_t h1 = Hash::splitmix64(c.row + FIXED_RANDOM);
-        uint64_t h2 = Hash::splitmix64(c.col + FIXED_RANDOM);
+        uint64_t h1 = splitmix64(static_cast<uint64_t>(c.row) + FIXED_RANDOM);
+        uint64_t h2 = splitmix64(static_cast<uint64_t>(c.col) + FIXED_RANDOM);
         return h1 ^ (h2 << 1);
     }
 };
 
 /**
- * Represents an area of a table based on its from and to coordinates as a rectangle.
- * that above lft corner is from and below right corner is to coordinates.
+ * @brief Represents a rectangular area in a table.
+ *
+ * The rectangle is defined by two coordinates:
+ * - `from`: upper-left corner
+ * - `to`:   bottom-right corner
+ *
+ * Ordering is not enforced; helper functions compute bounds safely.
  */
 struct Area {
-    Coordinates from;
-    Coordinates to;
+    Coordinates from; ///< Upper-left corner
+    Coordinates to;   ///< Bottom-right corner
 
     /**
-     * Constructs an area of from-to coordinates in a table.
+     * @brief Constructs a table area.
      *
-     * The constructor uses default arguments allowing the following forms:
-     * - One argument: initializes row, col is set to default coordinates - both row and col equal to 0
-     * - Two arguments: initializes both row and col
+     * Supported forms:
+     * - Area(from)         -> `to` defaults to (0, 0)
+     * - Area(from, to)     -> explicit rectangle
      *
-     * @param from - upper-left corner's coordinates
-     * @param to - bottom-right corner's coordinates
+     * @param from Upper-left corner coordinates
+     * @param to Bottom-right corner coordinates (default: (0, 0))
      */
-    Area(Coordinates from, Coordinates to = Coordinates()) : from(from), to(to) {
-    }
+    Area(Coordinates from, Coordinates to = Coordinates())
+        : from(from), to(to) {}
 
     /**
-     * Finds the max of from and to row's coordinate.
-     * @return the max row's coordinate.
+     * @brief Returns the maximum row index covered by the area.
+     *
+     * @return Maximum row value between `from` and `to`
      */
     int64_t maxRow() const {
         return std::max(from.row, to.row);
     }
 
     /**
-     * Finds the max of from and to col's coordinate.
-     * @return the max col's coordinate.
+     * @brief Returns the maximum column index covered by the area.
+     *
+     * @return Maximum column value between `from` and `to`
      */
     int64_t maxCol() const {
         return std::max(from.col, to.col);
@@ -108,54 +137,68 @@ struct Area {
 };
 
 /**
- * Represents the cell structure as containing an expression, cachedValue and coordinates (coords).
+ * @brief Represents a spreadsheet cell.
+ *
+ * A cell stores:
+ * - The original expression
+ * - A cached numeric value (after evaluation)
+ * - Its position in the table
  */
 struct Cell {
-    std::string expression;
-    double cachedValue;
-    Coordinates coords;
+    std::string expression; ///< Raw expression text
+    double cachedValue;     ///< Cached evaluation result
+    Coordinates coords;     ///< Cell position
 
     /**
-     * Constructs a cell via passing expression and coordinates. Sets the cachedValue to 0.o in the beginning before
-     * the expression to be evaluated.
+     * @brief Constructs a Cell.
      *
-     * @param expression the expression stored in the cell
-     * @param coords the coordinates of the cell
+     * The cached value is initialized to 0.0 and is expected
+     * to be updated after expression evaluation.
+     *
+     * @param expression Expression stored in the cell
+     * @param coords Coordinates of the cell
      */
-    Cell(const std::string &expression, const Coordinates coords) : expression(expression),
-                                                                    cachedValue(0), coords(coords) {
-    }
+    Cell(const std::string& expression, Coordinates coords)
+        : expression(expression), cachedValue(0.0), coords(coords) {}
 };
 
 /**
- * Represents the type of the tokens in the expression.
+ * @brief Token types used during expression tokenization.
  */
 enum TokenType {
-    End, // the end of the expression that should be tokenized
-    Number, // the number value that is stored in the expression
-    Plus, Minus, Mul, Div, Mod, // the operator value that is stored in the expression (+, -, *, / or %)
-    LParen, RParen, // the parenthesis value that is stored in the expression - ( or )
-    Comma, // the comma that is stored in the expression
-    Equal, NotEqual, Less, Greater, // the comparison operator value that is stored in the expression (==, !=, < or >)
-    Identifier, // the identifier value that is stored in the expression
-    CellRef,
-    // the cell reference that is stored in the expression (ex: R1C2, R[0]C5, R5C[0], R[-1]C10, R10C[-1] and so on)
+    End,        ///< End of input
+    Number,     ///< Numeric literal
+    Plus,       ///< '+'
+    Minus,      ///< '-'
+    Mul,        ///< '*'
+    Div,        ///< '/'
+    Mod,        ///< '%'
+    LParen,     ///< '('
+    RParen,     ///< ')'
+    Comma,      ///< ','
+    Equal,      ///< '=='
+    NotEqual,   ///< '!='
+    Less,       ///< '<'
+    Greater,    ///< '>'
+    Identifier, ///< Function or variable identifier
+    CellRef     ///< Cell reference (e.g., R1C2, R[-1]C5)
 };
 
 /**
- * Represents the token in the expression.
+ * @brief Represents a single token in an expression.
  */
 struct Token {
-    TokenType type;
-    std::string lexeme;
+    TokenType type;     ///< Token category
+    std::string lexeme; ///< Raw token text
 
     /**
-     * Constructs the token/s of the expression by initializing type and lexeme values.
-     * @param type
-     * @param lexeme
+     * @brief Constructs a Token.
+     *
+     * @param type Token type
+     * @param lexeme Token text as it appears in the expression
      */
-    Token(const TokenType type, const std::string &lexeme) : type(type), lexeme(lexeme) {
-    }
+    Token(TokenType type, const std::string& lexeme)
+        : type(type), lexeme(lexeme) {}
 };
 
-#endif //TYPES_H
+#endif // TYPES_H

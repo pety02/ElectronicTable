@@ -9,78 +9,93 @@
 #include "Types.h"
 
 /**
- * Tokenizer is responsible for converting a string expression
- * into a sequence of tokens that can later be parsed and evaluated.
+ * @brief Performs lexical analysis of an expression string.
  *
- * It performs lexical analysis by reading the input character by character
- * and grouping them into meaningful tokens such as numbers, operators,
- * identifiers, and cell references.
+ * Tokenizer converts a raw expression into a sequence of tokens
+ * that can be consumed by the ExpressionParser. It recognizes
+ * numeric literals, operators, identifiers, keywords, and cell
+ * references, while ignoring whitespace.
  */
 class Tokenizer {
-    const std::string &input;
-    size_t pos;
+    const std::string& input; ///< Expression being tokenized
+    size_t pos;               ///< Current position in the input string
 
     /**
-     * Skips all whitespace characters starting from the current position.
-     * Advances the internal position until a non-whitespace character
+     * @brief Skips whitespace characters.
+     *
+     * Advances the current position until a non-whitespace character
      * or the end of the input is reached.
      */
     void skipWhitespace();
 
     /**
-     * Attempts to tokenize a numeric literal starting at the current position.
+     * @brief Attempts to tokenize a numeric literal.
      *
-     * @return An optional Token of type Number if successful,
-     *         or std::nullopt if the current character does not start a number.
+     * Supports integer and floating-point representations.
+     *
+     * @return Token of type Number if a numeric literal is found,
+     *         otherwise std::nullopt
      */
     std::optional<Token> tokenizeNumber();
 
     /**
-     * Attempts to tokenize a cell reference of the form RxCy, where
-     * x and y can be absolute or relative (e.g. R5C3, R[-1]C[0]).
+     * @brief Attempts to tokenize a cell reference.
      *
-     * @return An optional Token of type CellRef if successful,
-     *         or std::nullopt if the current character does not start a cell reference.
+     * Recognizes references of the form:
+     * - Absolute: R5C3
+     * - Relative: R[-1]C[0]
      *
-     * @throws std::runtime_error if the cell reference syntax is invalid.
+     * @return Token of type CellRef if successful,
+     *         otherwise std::nullopt
+     *
+     * @throws std::runtime_error if the syntax resembles a cell
+     *         reference but is malformed.
      */
     std::optional<Token> tokenizeCellReference();
 
     /**
-     * Attempts to tokenize an identifier, such as a function name
-     * (e.g. sum, if, and, or, not).
+     * @brief Attempts to tokenize an identifier.
      *
-     * @return An optional Token of type Identifier if successful,
-     *         or std::nullopt if the current character does not start an identifier.
+     * Identifiers may represent function names or logical keywords
+     * such as `sum`, `if`, `and`, `or`, and `not`.
+     *
+     * @return Token of type Identifier if successful,
+     *         otherwise std::nullopt
      */
     std::optional<Token> tokenizeIdentifier();
 
     /**
-     * Tokenizes operators and punctuation characters such as
-     * +, -, *, /, %, parentheses, commas, and comparison operators.
+     * @brief Tokenizes operators and punctuation.
      *
-     * @return A Token representing the operator or punctuation.
+     * Handles:
+     * - Arithmetic operators: +, -, *, /, %
+     * - Comparison operators: ==, !=, <, >
+     * - Parentheses: (, )
+     * - Comma: ,
      *
-     * @throws std::runtime_error if an unexpected character is encountered.
+     * @return Token representing the parsed operator or symbol
+     *
+     * @throws std::runtime_error if an unexpected character is encountered
      */
     Token tokenizeOperator();
 
 public:
     /**
-     * Constructs a Tokenizer for the given input expression.
+     * @brief Constructs a Tokenizer for an expression.
      *
-     * @param input The string expression to be tokenized.
+     * @param input Expression string to tokenize
      */
-    explicit Tokenizer(const std::string &input);
+    explicit Tokenizer(const std::string& input);
 
     /**
-     * Returns the next token from the input expression.
-     * Whitespace is skipped automatically.
+     * @brief Retrieves the next token from the input.
      *
-     * @return The next Token in the sequence, or a token of type End
-     *         if the end of the input has been reached.
+     * Whitespace is skipped automatically. When the end of the input
+     * is reached, a token of type End is returned.
+     *
+     * @return Next token in the sequence
      */
     Token next();
 };
 
-#endif //TOKENIZER_H
+#endif // TOKENIZER_H

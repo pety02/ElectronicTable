@@ -7,110 +7,147 @@
 
 #include "Types.h"
 #include <unordered_map>
+#include <utility>
 
 /**
- * Represents a sparse rectangular table of cells.
+ * @brief Represents a sparse two-dimensional table of cells.
  *
- * The table stores only non-empty cells internally, allowing it to handle
- * very large tables efficiently.
+ * The table stores only non-empty cells internally, allowing efficient
+ * handling of large tables with mostly empty entries.
  */
 class Table {
 private:
-    std::unordered_map<Coordinates, Cell, Hash> cells;
-    Coordinates focusedCoords;
+    std::unordered_map<Coordinates, Cell, Hash> cells; ///< Stored non-empty cells
+    Coordinates focusedCoords;                          ///< Currently focused cell (if applicable)
 
     /**
-     * Finds the minimum bounding rectangle that contains all non-empty cells
-     * in the table.
+     * @brief Computes the bounding rectangle of all non-empty cells.
      *
-     * @return A pair of values representing the maximum row and column indices.
+     * Determines the maximum row and column indices occupied by any cell.
+     * If the table is empty, the returned values are implementation-defined.
+     *
+     * @return Pair of (maxRow, maxCol)
      */
     std::pair<int64_t, int64_t> findTableBounds() const;
 
 public:
     /**
-     * Constructs an empty table.
+     * @brief Constructs an empty table.
+     *
+     * Initially contains no cells.
      */
     Table();
 
     /**
-     * Sets the expression of a cell at the given coordinates.
-     * If the cell does not exist, it is created.
+     * @brief Sets or updates the expression of a cell.
      *
-     * @param coords The coordinates of the cell.
-     * @param expression The expression to store in the cell.
+     * If the cell at the given coordinates does not exist, it is created.
+     * Any previously cached value is expected to be recomputed on demand.
+     *
+     * @param coords Coordinates of the cell
+     * @param expression Expression to store in the cell
      */
-    void set(Coordinates coords, const std::string &expression);
+    void set(Coordinates coords, const std::string& expression);
 
     /**
-     * Retrieves the expression stored in the cell at the given coordinates.
+     * @brief Retrieves the expression stored in a cell.
      *
-     * @param coords The coordinates of the cell.
-     * @return The expression stored in the cell.
+     * @param coords Coordinates of the cell
+     * @return Expression stored at the given coordinates
      *
-     * @throws std::runtime_error if the cell does not exist.
+     * @throws std::runtime_error if the cell does not exist
      */
     std::string get(Coordinates coords) const;
 
     /**
-     * Prints the values of all cells within the given area.
+     * @brief Prints evaluated values of all cells within a rectangular area.
      *
-     * @param area The rectangular area to print.
+     * Cells are printed in row-major order.
+     *
+     * @param area Rectangular area to print
      */
-    void printVal(const Area &area) const;
+    void printVal(const Area& area) const;
 
     /**
-     * Prints the expressions of all cells within the given area.
+     * @brief Prints raw expressions of all cells within a rectangular area.
      *
-     * @param area The rectangular area to print.
+     * Cells are printed in row-major order.
+     *
+     * @param area Rectangular area to print
      */
-    void printExpression(const Area &area) const;
+    void printExpression(const Area& area) const;
 
     /**
-     * Prints the values of all cells in the table, formatted by rows.
+     * @brief Prints evaluated values of all cells in the table.
+     *
+     * The output is formatted by rows and columns based on the
+     * current table bounds.
      */
     void printValAll() const;
 
     /**
-     * Prints the expressions of all cells in the table, formatted by rows.
+     * @brief Prints raw expressions of all cells in the table.
+     *
+     * The output is formatted by rows and columns based on the
+     * current table bounds.
      */
     void printExpressionAll() const;
 
     /**
-     * Computes the sum of the values of all non-empty cells
-     * within the given rectangular area.
+     * @brief Computes the sum of all non-empty cells in a rectangular area.
+     *
+     * Only cells that exist and contain expressions are considered.
+     *
+     * @param leftCell Upper-left corner of the area
+     * @param rightCell Bottom-right corner of the area
+     * @return Sum of evaluated cell values
      */
     double sum(Coordinates leftCell, Coordinates rightCell) const;
 
     /**
-     * Counts the number of non-empty cells within the given rectangular area.
+     * @brief Counts non-empty cells in a rectangular area.
+     *
+     * @param leftCell Upper-left corner of the area
+     * @param rightCell Bottom-right corner of the area
+     * @return Number of existing cells within the area
      */
     int count(Coordinates leftCell, Coordinates rightCell) const;
 
     /**
-     * Finds the minimum value among all non-empty cells
-     * within the given rectangular area.
+     * @brief Finds the minimum value among non-empty cells in a rectangular area.
+     *
+     * @param leftCell Upper-left corner of the area
+     * @param rightCell Bottom-right corner of the area
+     * @return Minimum evaluated value
      */
     double min(Coordinates leftCell, Coordinates rightCell) const;
 
     /**
-     * Finds the maximum value among all non-empty cells
-     * within the given rectangular area.
+     * @brief Finds the maximum value among non-empty cells in a rectangular area.
+     *
+     * @param leftCell Upper-left corner of the area
+     * @param rightCell Bottom-right corner of the area
+     * @return Maximum evaluated value
      */
     double max(Coordinates leftCell, Coordinates rightCell) const;
 
     /**
-     * Computes the average value of all non-empty cells
-     * within the given rectangular area.
+     * @brief Computes the average value of non-empty cells in a rectangular area.
+     *
+     * @param leftCell Upper-left corner of the area
+     * @param rightCell Bottom-right corner of the area
+     * @return Average evaluated value
      */
     double avg(Coordinates leftCell, Coordinates rightCell) const;
 
     /**
-     * Provides read-only access to the internal map of cells.
+     * @brief Provides read-only access to all stored cells.
      *
-     * @return A constant reference to the internal cell map.
+     * Intended for inspection, debugging, or iteration.
+     *
+     * @return Copy of the internal cell map
      */
     std::unordered_map<Coordinates, Cell, Hash> getCells() const;
 };
 
-#endif //TABLE_H
+#endif // TABLE_H

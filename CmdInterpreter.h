@@ -8,26 +8,38 @@
 #include "Table.h"
 
 /**
- * CmdInterpreter handles file-based input and output operations
- * for saving and loading the table contents.
+ * @brief Handles file-based input and output for tables.
+ *
+ * CmdInterpreter provides utilities for persisting table contents
+ * to disk and restoring them later using a CSV-based format.
  */
 class CmdInterpreter {
 public:
  /**
-  * Saves the contents of the table to a file in CSV format.
+  * @brief Saves a table to a CSV file.
   *
-  * @param fileName The name of the output file.
-  * @param table The table whose contents will be saved.
+  * Only non-empty cells are written to the file. Each cell's
+  * coordinates and stored expression are serialized.
+  *
+  * @param fileName Path to the output CSV file
+  * @param table Table whose contents will be saved
+  *
+  * @throws std::runtime_error if the file cannot be opened or written
   */
- static void save(const std::string &fileName, const Table& table);
+ static void save(const std::string& fileName, const Table& table);
 
  /**
-  * Loads table contents from a CSV file.
+  * @brief Loads table contents from a CSV file.
   *
-  * @param fileName The name of the input file.
-  * @param table The table into which the contents will be loaded.
+  * Existing table contents may be overwritten or extended,
+  * depending on the implementation.
+  *
+  * @param fileName Path to the input CSV file
+  * @param table Table into which the contents will be loaded
+  *
+  * @throws std::runtime_error if the file cannot be opened or parsed
   */
  static void load(const std::string& fileName, Table& table);
 };
 
-#endif //CMD_INTERPRETER_H
+#endif // CMD_INTERPRETER_H
