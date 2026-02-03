@@ -18,8 +18,9 @@
 class Table {
 private:
     std::unordered_map<Coordinates, Cell, Hash> cells; ///< Stored non-empty cells
-    Coordinates focusedCoords;                          ///< Currently focused cell (if applicable)
+    Coordinates focusedCoords; ///< Currently focused cell (if applicable)
 
+public:
     /**
      * @brief Computes the bounding rectangle of all non-empty cells.
      *
@@ -30,7 +31,6 @@ private:
      */
     std::pair<int64_t, int64_t> findTableBounds() const;
 
-public:
     /**
      * @brief Constructs an empty table.
      *
@@ -47,7 +47,7 @@ public:
      * @param coords Coordinates of the cell
      * @param expression Expression to store in the cell
      */
-    void set(Coordinates coords, const std::string& expression);
+    void set(Coordinates coords, const std::string &expression);
 
     /**
      * @brief Retrieves the expression stored in a cell.
@@ -58,40 +58,6 @@ public:
      * @throws std::runtime_error if the cell does not exist
      */
     std::string get(Coordinates coords) const;
-
-    /**
-     * @brief Prints evaluated values of all cells within a rectangular area.
-     *
-     * Cells are printed in row-major order.
-     *
-     * @param area Rectangular area to print
-     */
-    void printVal(const Area& area) const;
-
-    /**
-     * @brief Prints raw expressions of all cells within a rectangular area.
-     *
-     * Cells are printed in row-major order.
-     *
-     * @param area Rectangular area to print
-     */
-    void printExpression(const Area& area) const;
-
-    /**
-     * @brief Prints evaluated values of all cells in the table.
-     *
-     * The output is formatted by rows and columns based on the
-     * current table bounds.
-     */
-    void printValAll() const;
-
-    /**
-     * @brief Prints raw expressions of all cells in the table.
-     *
-     * The output is formatted by rows and columns based on the
-     * current table bounds.
-     */
-    void printExpressionAll() const;
 
     /**
      * @brief Computes the sum of all non-empty cells in a rectangular area.
@@ -147,7 +113,7 @@ public:
      *
      * @return Copy of the internal cell map
      */
-    std::unordered_map<Coordinates, Cell, Hash> getCells() const;
+    const std::unordered_map<Coordinates, Cell, Hash>& getCells() const;
 };
 
 #endif // TABLE_H

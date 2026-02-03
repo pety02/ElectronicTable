@@ -8,10 +8,11 @@
 #include "Table.h"
 
 /**
- * @brief Handles file-based input and output for tables.
+ * @brief Executes user commands over a table.
  *
- * CmdInterpreter provides utilities for persisting table contents
- * to disk and restoring them later using a CSV-based format.
+ * CmdInterpreter maps high-level textual commands
+ * (SET, PRINT, SAVE, LOAD) to operations on Table
+ * and ExpressionParser.
  */
 class CmdInterpreter {
 public:
@@ -40,6 +41,31 @@ public:
   * @throws std::runtime_error if the file cannot be opened or parsed
   */
  static void load(const std::string& fileName, Table& table);
+
+ /**
+ *
+ */
+ static void set(const Coordinates& address, const std::string& expression, Table& table);
+
+ /**
+ *
+ */
+ static void printValue(const Area& area, const Table& table);
+
+ /**
+ *
+ */
+ static void printExpression(const Area& area, const Table& table);
+
+ /**
+ *
+ */
+ static void printAllValues(const Table& table);
+
+ /**
+ *
+ */
+ static void printAllExpressions(const Table& table);
 };
 
 #endif // CMD_INTERPRETER_H

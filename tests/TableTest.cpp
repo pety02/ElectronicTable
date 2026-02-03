@@ -43,16 +43,3 @@ TEST_CASE("Table aggregation functions", "[table]") {
     REQUIRE(t.max({0,0}, {1,1}) == 4.0);
     REQUIRE(t.avg({0,0}, {1,1}) == 2.5);
 }
-
-TEST_CASE("Table print functions run without crash", "[table]") {
-    Table t;
-    t.set({0,0}, "10");
-    t.set({0,1}, "20");
-
-    t.printValAll();
-    t.printExpressionAll();
-
-    Area area({0,0}, {0,1});
-    t.printVal(area);
-    t.printExpression(area);
-}

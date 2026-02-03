@@ -35,104 +35,6 @@ std::string Table::get(Coordinates coords) const {
   return this->cells.at(coords).expression;
 }
 
-void Table::printVal(const Area &area) const {
-    int64_t maxRow = area.maxRow();
-    int64_t maxCol = area.maxCol();
-
-    for (int64_t r = 0; r <= maxRow; ++r) {
-        for (int64_t c = 0; c <= maxCol; ++c) {
-            Coordinates key = {r, c};
-            auto it = cells.find(key);
-
-            if (it != cells.end()) {
-                std::cout << it->second.cachedValue;
-            }
-
-            if (c != maxCol) {
-                std::cout << ", ";
-            }
-        }
-        std::cout << '\n';
-    }
-}
-
-void Table::printExpression(const Area &area) const {
-    int64_t maxRow = area.maxRow();
-    int64_t maxCol = area.maxCol();
-
-    for (int64_t r = 0; r <= maxRow; ++r) {
-        for (int64_t c = 0; c <= maxCol; ++c) {
-            Coordinates key = {r, c};
-            auto it = cells.find(key);
-
-            if (it != cells.end()) {
-                std::cout << it->second.expression;
-            }
-
-            if (c != maxCol) {
-                std::cout << ", ";
-            }
-        }
-        std::cout << '\n';
-    }
-}
-
-void Table::printValAll() const {
-    if (cells.empty()) {
-        return;
-    }
-
-    // Find table bounds
-    std::pair<int64_t, int64_t> bounds = this->findTableBounds();
-    int64_t maxRow = bounds.first;
-    int64_t maxCol = bounds.second;
-
-    // Print row by row
-    for (int64_t r = 0; r <= maxRow; ++r) {
-        for (int64_t c = 0; c <= maxCol; ++c) {
-            Coordinates key = {r, c};
-            auto it = cells.find(key);
-
-            if (it != cells.end()) {
-                std::cout << it->second.cachedValue;
-            }
-
-            if (c != maxCol) {
-                std::cout << ", ";
-            }
-        }
-        std::cout << '\n';
-    }
-}
-
-void Table::printExpressionAll() const {
-    if (cells.empty()) {
-        return;
-    }
-
-    // Find table bounds
-    std::pair<int64_t, int64_t> bounds = this->findTableBounds();
-    int64_t maxRow = bounds.first;
-    int64_t maxCol = bounds.second;
-
-    // Print row by row
-    for (int64_t r = 0; r <= maxRow; ++r) {
-        for (int64_t c = 0; c <= maxCol; ++c) {
-            Coordinates key = {r, c};
-            auto it = cells.find(key);
-
-            if (it != cells.end()) {
-                std::cout << it->second.expression;
-            }
-
-            if (c != maxCol) {
-                std::cout << ", ";
-            }
-        }
-        std::cout << '\n';
-    }
-}
-
 double Table::sum(Coordinates leftCell, Coordinates rightCell) const {
     return this->cells.at(leftCell).cachedValue
     + this->cells.at(rightCell).cachedValue;
@@ -186,6 +88,6 @@ double Table::avg(Coordinates leftCell, Coordinates rightCell) const {
     return (left + right) / 2;
 }
 
-std::unordered_map<Coordinates, Cell, Hash> Table::getCells() const {
+const std::unordered_map<Coordinates, Cell, Hash>& Table::getCells() const {
     return this->cells;
 }

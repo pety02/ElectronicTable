@@ -134,6 +134,16 @@ struct Area {
     int64_t maxCol() const {
         return std::max(from.col, to.col);
     }
+
+    // Normalization helpers
+    int64_t minRow() const {
+        return std::min(from.row, to.row);
+    }
+
+    int64_t minCol() const {
+        return std::min(from.col, to.col);
+    }
+
 };
 
 /**
