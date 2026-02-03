@@ -19,7 +19,7 @@
 class ExpressionParser {
     Tokenizer tokenizer;                 ///< Token stream for the expression
     Token currentToken;                  ///< Currently processed token
-    const Table& table;                  ///< Table used to resolve cell references
+    Table& table;                        ///< Table used to resolve cell references
     Coordinates currentCellCoordinates;  ///< Coordinates of the evaluated cell
 
     /**
@@ -40,7 +40,7 @@ public:
      */
     ExpressionParser(const Tokenizer& tokenizer,
                      Token token,
-                     const Table& table,
+                     Table& table,
                      const Coordinates& currentCellCoordinates);
 
     /**
@@ -54,7 +54,7 @@ public:
      * @return Numeric result of the evaluation
      */
     static double evaluate(const std::string& expression,
-                           const Table& table,
+                           Table& table,
                            Coordinates cellCoordinates);
 
     /**

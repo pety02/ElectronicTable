@@ -113,7 +113,21 @@ public:
      *
      * @return Reference to the internal cell map
      */
-    const std::unordered_map<Coordinates, Cell, Hash>& getCells() const;
+    const std::unordered_map<Coordinates, Cell, Hash> &getCells() const;
+
+    /**
+    * @brief Finds the cached value of a cell in the table
+    *
+    * @return the cached value
+    */
+    double getCachedValue(const Coordinates &address) const;
+
+    /**
+    * @brief Sets the calculated value as a cachedValue of a cell
+    *
+    * @param value calculatedValue of an expression
+    */
+    void setCachedValue(double value, const Coordinates &address);
 };
 
 #endif // TABLE_H

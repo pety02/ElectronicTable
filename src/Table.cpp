@@ -91,3 +91,11 @@ double Table::avg(Coordinates leftCell, Coordinates rightCell) const {
 const std::unordered_map<Coordinates, Cell, Hash>& Table::getCells() const {
     return this->cells;
 }
+
+double Table::getCachedValue(const Coordinates &address) const {
+    return this->cells.at(address).cachedValue;
+}
+
+void Table::setCachedValue(double value, const Coordinates &address) {
+    this->cells.at(address).cachedValue = value;
+}

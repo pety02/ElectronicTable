@@ -11,13 +11,13 @@ void ExpressionParser::advance() {
 }
 
 ExpressionParser::ExpressionParser(const Tokenizer &tokenizer, Token token,
-                                   const Table &table,
+                                   Table &table,
                                    const Coordinates &currentCellCoordinates) : tokenizer(tokenizer),
     currentToken(std::move(token)), table(table), currentCellCoordinates(currentCellCoordinates) {
 }
 
 double ExpressionParser::evaluate(const std::string &expression,
-                                  const Table &table,
+                                  Table &table,
                                   Coordinates cellCoordinates) {
     Tokenizer tokenizer(expression);
 
@@ -39,7 +39,21 @@ bool ExpressionParser::hasCell(Coordinates c) const {
 }
 
 double ExpressionParser::getValue(Coordinates c) const {
-    return this->table.getCells().at(c).cachedValue;
+    const auto& cell = table.getCells().at(c);
+
+    double calculatedValue = ExpressionParser::evaluate(
+        cell.expression,
+        table,
+        c
+    );
+
+    if(table.getCachedValue(c) == calculatedValue) {
+        return calculatedValue;
+    }
+
+    table.setCachedValue(calculatedValue, c);
+
+    return calculatedValue;
 }
 
 const std::string &ExpressionParser::getExpression(Coordinates c) const {
@@ -51,14 +65,14 @@ double ExpressionParser::parseExpression() {
 }
 
 double ExpressionParser::parseLogicalOr() {
-    double left = parseEquality();
+    double left = parseLogicalAnd();
 
     while (currentToken.type == TokenType::Identifier &&
            currentToken.lexeme == "or") {
         advance();
 
         if (left >= 1.0) {
-            parseEquality();
+            parseLogicalAnd();
             left = 1.0;
         } else {
             double right = parseEquality();
