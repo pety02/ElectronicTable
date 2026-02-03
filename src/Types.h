@@ -135,15 +135,25 @@ struct Area {
         return std::max(from.col, to.col);
     }
 
-    // Normalization helpers
+    // Note: `int64_t minRow() const` and `int64_t minCol() const` methods are implemented
+    //        only with the Area struct normalization purpose.
+    /**
+     * @brief Returns the minimum row index covered by the area.
+     *
+     * @return Minimum row value between `from` and `to`
+     */
     int64_t minRow() const {
         return std::min(from.row, to.row);
     }
 
+    /**
+     * @brief Returns the minimum column index covered by the area.
+     *
+     * @return Minimum column value between `from` and `to`
+     */
     int64_t minCol() const {
         return std::min(from.col, to.col);
     }
-
 };
 
 /**

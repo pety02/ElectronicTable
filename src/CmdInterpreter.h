@@ -8,11 +8,11 @@
 #include "Table.h"
 
 /**
- * @brief Executes user commands over a table.
+ * @brief Executes high-level user commands on a table instance.
  *
- * CmdInterpreter maps high-level textual commands
- * (SET, PRINT, SAVE, LOAD) to operations on Table
- * and ExpressionParser.
+ * CmdInterpreter provides static utility functions that interpret
+ * user commands and map them to corresponding Table and
+ * ExpressionParser operations.
  */
 class CmdInterpreter {
 public:
@@ -43,28 +43,56 @@ public:
  static void load(const std::string& fileName, Table& table);
 
  /**
- *
- */
+  * @brief Assigns an expression to a cell in the table.
+  *
+  * If the specified cell doesn’t exist, it will be created.
+  *
+  * @param address Target cell coordinates
+  * @param expression Expression string to set
+  * @param table Table where the cell resides
+  */
  static void set(const Coordinates& address, const std::string& expression, Table& table);
 
  /**
- *
- */
+  * @brief Prints evaluated numeric values for all cells within an area.
+  *
+  * Each cell’s expression is evaluated via ExpressionParser and
+  * displayed in a grid-like output.
+  *
+  * @param area Area defining the rectangular region to print
+  * @param table Source table containing the cells
+  */
  static void printValue(const Area& area, const Table& table);
 
  /**
- *
- */
+  * @brief Prints the raw expressions for all cells within an area.
+  *
+  * Similar to printValue(), but instead of evaluated values,
+  * the original expressions are shown.
+  *
+  * @param area Area defining the rectangular region to print
+  * @param table Source table containing the cells
+  */
  static void printExpression(const Area& area, const Table& table);
 
  /**
- *
- */
+  * @brief Prints evaluated values for all occupied cells in the table.
+  *
+  * The printed area automatically spans all non-empty cells detected
+  * by findTableBounds().
+  *
+  * @param table Table to be displayed
+  */
  static void printAllValues(const Table& table);
 
  /**
- *
- */
+  * @brief Prints all expressions of the table in a grid format.
+  *
+  * Similar to printAllValues(), but displays stored expressions
+  * instead of computed numeric values.
+  *
+  * @param table Table to be displayed
+  */
  static void printAllExpressions(const Table& table);
 };
 

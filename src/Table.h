@@ -111,7 +111,7 @@ public:
      *
      * Intended for inspection, debugging, or iteration.
      *
-     * @return Copy of the internal cell map
+     * @return Reference to the internal cell map
      */
     const std::unordered_map<Coordinates, Cell, Hash>& getCells() const;
 };
