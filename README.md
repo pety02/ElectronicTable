@@ -1,4 +1,4 @@
-# Spreadsheet Engine (Project 6 – Data Structures)
+# Spreadsheet Engine named 'Electronic Table' (Project 6 – Data Structures)
 
 > This project implements a console-based spreadsheet engine written in C++ (C++17). It supports arithmetic and logical expressions, absolute and relative cell addressing, aggregation functions over cell ranges, and persistent storage using CSV files.
 >
