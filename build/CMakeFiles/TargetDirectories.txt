@@ -1,0 +1,10 @@
+/Users/A201808/Desktop/ElectronicTable/build/CMakeFiles/ElectronicTable.dir
+/Users/A201808/Desktop/ElectronicTable/build/CMakeFiles/tests.dir
+/Users/A201808/Desktop/ElectronicTable/build/CMakeFiles/edit_cache.dir
+/Users/A201808/Desktop/ElectronicTable/build/CMakeFiles/rebuild_cache.dir
+/Users/A201808/Desktop/ElectronicTable/build/_deps/catch2-build/CMakeFiles/edit_cache.dir
+/Users/A201808/Desktop/ElectronicTable/build/_deps/catch2-build/CMakeFiles/rebuild_cache.dir
+/Users/A201808/Desktop/ElectronicTable/build/_deps/catch2-build/src/CMakeFiles/Catch2.dir
+/Users/A201808/Desktop/ElectronicTable/build/_deps/catch2-build/src/CMakeFiles/Catch2WithMain.dir
+/Users/A201808/Desktop/ElectronicTable/build/_deps/catch2-build/src/CMakeFiles/edit_cache.dir
+/Users/A201808/Desktop/ElectronicTable/build/_deps/catch2-build/src/CMakeFiles/rebuild_cache.dir

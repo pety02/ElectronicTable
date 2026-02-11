@@ -1,0 +1,1 @@
+/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/ElectronicTable.dir/src/main.cpp.o CMakeFiles/ElectronicTable.dir/src/Table.cpp.o CMakeFiles/ElectronicTable.dir/src/Tokenizer.cpp.o CMakeFiles/ElectronicTable.dir/src/ExpressionParser.cpp.o CMakeFiles/ElectronicTable.dir/src/CmdInterpreter.cpp.o -o ElectronicTable
