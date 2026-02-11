@@ -14,13 +14,13 @@ struct Workflow {
 };
 
 void evaluateAll(Table& table) {
-    for (const auto& [coord, cell] : table.getCells()) {
+    for (const auto& el : table.getCells()) {
         double value = ExpressionParser::evaluate(
-            cell.expression,
+            el.second.expression,
             table,
-            coord
+            el.first
         );
-        table.setCachedValue(value, coord);
+        table.setCachedValue(value, el.first);
     }
 }
 
@@ -127,5 +127,6 @@ int main() {
     }
 
     std::cout << "\n=== ALL WORKFLOWS EXECUTED ===\n";
+
     return 0;
 }

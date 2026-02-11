@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.28)
-project(ElectronicTable)
 
+project(ElectronicTable LANGUAGES CXX)
+
+# ----------------------------
+# C++ Standard (REQUIRED)
+# ----------------------------
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ----------------------------
 # Main executable
@@ -14,7 +20,6 @@ add_executable(ElectronicTable
         src/CmdInterpreter.cpp
 )
 
-# Include headers for main
 target_include_directories(ElectronicTable PRIVATE src)
 
 # ----------------------------
@@ -39,13 +44,11 @@ add_executable(tests
         tests/ExpressionParserTest.cpp
         tests/CmdInterpreterTests.cpp
 
-        # Include the source files so tests can link to implementations
         src/Table.cpp
         src/Tokenizer.cpp
         src/ExpressionParser.cpp
         src/CmdInterpreter.cpp
 )
 
-# Link Catch2 and include headers
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 target_include_directories(tests PRIVATE src)
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)

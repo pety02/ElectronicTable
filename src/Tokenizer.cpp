@@ -11,9 +11,9 @@ void Tokenizer::skipWhitespace() {
     }
 }
 
-std::optional<Token> Tokenizer::tokenizeNumber() {
+Token* Tokenizer::tokenizeNumber() {
     if (!std::isdigit(input[pos])) {
-        return std::nullopt;
+        return nullptr;
     }
 
     size_t start = pos;
@@ -21,12 +21,12 @@ std::optional<Token> Tokenizer::tokenizeNumber() {
         ++pos;
     }
 
-    return Token{TokenType::Number, input.substr(start, pos - start)};
+    return new Token{TokenType::Number, input.substr(start, pos - start)};
 }
 
-std::optional<Token> Tokenizer::tokenizeCellReference() {
+Token* Tokenizer::tokenizeCellReference() {
     if (input[pos] != 'R') {
-        return std::nullopt;
+        return nullptr;
     }
 
     size_t start = pos++;
@@ -63,12 +63,12 @@ std::optional<Token> Tokenizer::tokenizeCellReference() {
 
     parseIndex();  // column
 
-    return Token{TokenType::CellRef, input.substr(start, pos - start)};
+    return new Token{TokenType::CellRef, input.substr(start, pos - start)};
 }
 
-std::optional<Token> Tokenizer::tokenizeIdentifier() {
+Token* Tokenizer::tokenizeIdentifier() {
     if (!std::isalpha(static_cast<unsigned char>(input[pos]))) {
-        return std::nullopt;
+        return nullptr;
     }
 
     size_t start = pos++;
@@ -77,7 +77,7 @@ std::optional<Token> Tokenizer::tokenizeIdentifier() {
         ++pos;
            }
 
-    return Token{TokenType::Identifier, input.substr(start, pos - start)};
+    return new Token{TokenType::Identifier, input.substr(start, pos - start)};
 }
 
 Token Tokenizer::tokenizeOperator() {

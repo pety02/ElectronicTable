@@ -5,7 +5,6 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
-#include <optional>
 #include "Types.h"
 
 /**
@@ -36,7 +35,7 @@ class Tokenizer {
      * @return Token of type Number if a numeric literal is found,
      *         otherwise std::nullopt
      */
-    std::optional<Token> tokenizeNumber();
+    Token* tokenizeNumber();
 
     /**
      * @brief Attempts to tokenize a cell reference.
@@ -51,7 +50,7 @@ class Tokenizer {
      * @throws std::runtime_error if the syntax resembles a cell
      *         reference but is malformed.
      */
-    std::optional<Token> tokenizeCellReference();
+    Token* tokenizeCellReference();
 
     /**
      * @brief Attempts to tokenize an identifier.
@@ -62,7 +61,7 @@ class Tokenizer {
      * @return Token of type Identifier if successful,
      *         otherwise std::nullopt
      */
-    std::optional<Token> tokenizeIdentifier();
+    Token* tokenizeIdentifier();
 
     /**
      * @brief Tokenizes operators and punctuation.
