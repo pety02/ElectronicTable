@@ -1,5 +1,5 @@
 //
-// Created by User on 1/20/2026.
+// Created by Petya Licheva on 1/20/2026.
 //
 
 #include "CmdInterpreter.h"
@@ -142,7 +142,9 @@ void CmdInterpreter::printAllValues(const Table& table) {
 }
 
 void CmdInterpreter::printAllExpressions(const Table& table) {
-    if (table.getCells().empty()) {
+    auto cells = table.getCells();
+
+    if (cells.empty()) {
         return;
     }
 
@@ -155,16 +157,16 @@ void CmdInterpreter::printAllExpressions(const Table& table) {
     for (int64_t r = 0; r <= maxRow; ++r) {
         for (int64_t c = 0; c <= maxCol; ++c) {
             Coordinates key = {r, c};
-            auto it = table.getCells().find(key);
+            auto it = cells.find(key);
 
-            if (it != table.getCells().end()) {
-                std::cout << it->second.expression;
+            if (it != cells.end()) {
+                std::cout <<it->second.expression;
             }
 
             if (c != maxCol) {
                 std::cout << ", ";
             }
         }
-        std::cout << '\n';
+        std::cout <<'\n';
     }
 }

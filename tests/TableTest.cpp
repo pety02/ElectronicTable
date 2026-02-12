@@ -1,5 +1,5 @@
 //
-// Created by User on 2/2/2026.
+// Created by Petya Licheva on 2/2/2026.
 //
 #include <catch2/catch_test_macros.hpp>
 #include "../src/Table.h"
@@ -32,13 +32,16 @@ TEST_CASE("Table aggregation functions", "[table]") {
     t.set({1,1}, "4");
 
     // Manually set cached values
-    auto cells = t.getCells();
-    for (auto& [coords, cell] : cells) {
-        cell.cachedValue = std::stod(cell.expression);
+    for (int i = 0; i <= 1; ++i) {
+        for (int j = 0; j <= 1; ++j) {
+            Coordinates coords{i,j};
+            std::string cExpr=t.get(coords);
+            t.setCachedValue(std::stod(cExpr),coords);
+        }
     }
 
     REQUIRE(t.sum({0,0}, {1,1}) == 5.0);   // sum only uses two cells in your current impl
-    REQUIRE(t.count({0,0}, {1,1}) == 2);   // count only checks two cells
+    REQUIRE(t.count({0,0}, {1,1}) == 4);   // count only checks two cells
     REQUIRE(t.min({0,0}, {1,1}) == 1.0);
     REQUIRE(t.max({0,0}, {1,1}) == 4.0);
     REQUIRE(t.avg({0,0}, {1,1}) == 2.5);

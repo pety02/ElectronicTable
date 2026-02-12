@@ -1,5 +1,5 @@
 //
-// Created by User on 1/19/2026.
+// Created by Petya Licheva on 1/19/2026.
 //
 
 #ifndef TYPES_H
@@ -227,6 +227,23 @@ struct Token {
      */
     Token(TokenType type, std::string  lexeme)
         : type(type), lexeme(std::move(lexeme)) {}
+};
+
+/**
+ * @brief Represents the evaluation state of the cells in the table structure (class).
+ */
+enum class EvalState {
+    Visiting, ///< State that means if the table engine is visiting the cell right now or not
+    Evaluated ///< State thet means if the table engine is evaluated already the value of the cell or not
+};
+
+/**
+ * @brief Represents the calculated result as a pair of status (didParse) and a double value.
+ */
+struct Result {
+    bool didParse;  ///< Status that shows if the cell is successfully parsed or not
+    double value;   ///< Double value of the cell after calculations when the cell is
+                    ///< successfully parsed and evaluated or have a cached value in the cell
 };
 
 #endif // TYPES_H

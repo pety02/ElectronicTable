@@ -1,5 +1,5 @@
 //
-// Created by User on 2/2/2026.
+// Created by Petya Licheva on 2/2/2026.
 //
 #include <catch2/catch_test_macros.hpp>
 #include "../src/ExpressionParser.h"
