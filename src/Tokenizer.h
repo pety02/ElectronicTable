@@ -1,5 +1,5 @@
 //
-// Created by User on 1/20/2026.
+// Created by Petya Licheva on 1/20/2026.
 //
 
 #ifndef TOKENIZER_H
@@ -16,7 +16,7 @@
  * references, while ignoring whitespace.
  */
 class Tokenizer {
-    const std::string& input; ///< Expression being tokenized
+    const std::string input; ///< Expression being tokenized
     size_t pos;               ///< Current position in the input string
 
     /**

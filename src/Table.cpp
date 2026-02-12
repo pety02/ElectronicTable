@@ -1,5 +1,5 @@
 //
-// Created by User on 1/19/2026.
+// Created by Petya Licheva on 1/19/2026.
 //
 
 #include "Table.h"
@@ -29,6 +29,7 @@ void Table::set(Coordinates coords, const std::string &expression) {
   }
 
   this->cells[this->focusedCoords] = Cell(expression, this->focusedCoords);
+    this->invalidateEvalState();
 }
 
 std::string Table::get(Coordinates coords) const {
@@ -49,8 +50,8 @@ int Table::count(Coordinates leftCell, Coordinates rightCell) const {
     }
 
     int counter = 0;
-    for(int64_t i = leftCell.row; i < rightCell.row; ++i) {
-        for (int64_t j = leftCell.col; j < rightCell.col; ++j) {
+    for(int64_t i = leftCell.row; i <= rightCell.row; ++i) {
+        for (int64_t j = leftCell.col; j <= rightCell.col; ++j) {
             Coordinates currentCell = {i, j};
             if(!this->cells.at(currentCell).expression.empty()) {
                 counter++;
@@ -98,4 +99,32 @@ double Table::getCachedValue(const Coordinates &address) const {
 
 void Table::setCachedValue(double value, const Coordinates &address) {
     this->cells.at(address).cachedValue = value;
+}
+
+bool Table::isBeingEvaluated(const Coordinates &address) const {
+    auto it = evalState.find(address);
+    return it != evalState.end() &&
+           it->second == EvalState::Visiting;
+}
+
+bool Table::isEvaluated(const Coordinates &address) const {
+    auto it = evalState.find(address);
+    return it != evalState.end() &&
+           it->second == EvalState::Evaluated;
+}
+
+void Table::markEvaluating(const Coordinates &address) {
+    evalState[address] = EvalState::Visiting;
+}
+
+void Table::markEvaluated(const Coordinates &address)  {
+    evalState[address] = EvalState::Evaluated;
+}
+
+void Table::clearEvaluationState(const Coordinates &address)  {
+    evalState.erase(address);
+}
+
+void Table::invalidateEvalState() {
+    evalState.clear();
 }

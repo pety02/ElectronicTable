@@ -49,8 +49,8 @@
 ## Spreadsheet Storage
 
 - Table
-  - Implemented as std::unordered_map<Coordinates, Cell>
-  - Stores only non-empty cells (sparse representation)
+  - Implemented as std::unordered_map<Coordinates, Cell, Hash>
+  - Stores only non-empty cells (sparse representation), focused coordinates and std::unordered_map<Coordinates, EvalState, Hash> for the states of the cells
   - Supports:
     - setting and retrieving cell expressions;
     - aggregation functions over areas;

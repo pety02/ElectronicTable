@@ -1,5 +1,5 @@
 //
-// Created by User on 1/20/2026.
+// Created by Petya Licheva on 1/20/2026.
 //
 
 #ifndef EXPRESSION_PARSER_H

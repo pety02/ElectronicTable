@@ -1,5 +1,5 @@
 //
-// Created by User on 1/20/2026.
+// Created by Petya Licheva on 1/20/2026.
 //
 
 #include "ExpressionParser.h"
@@ -39,6 +39,16 @@ bool ExpressionParser::hasCell(Coordinates c) const {
 }
 
 double ExpressionParser::getValue(Coordinates c) const {
+    if (table.isBeingEvaluated(c)) {
+        throw std::runtime_error("Circular reference detected");
+    }
+
+    if (table.isEvaluated(c)) {
+        return table.getCachedValue(c);
+    }
+
+    table.markEvaluating(c);
+
     const auto& cell = table.getCells().at(c);
 
     double calculatedValue = ExpressionParser::evaluate(
@@ -51,6 +61,7 @@ double ExpressionParser::getValue(Coordinates c) const {
         return calculatedValue;
     }
 
+    table.markEvaluated(c);
     table.setCachedValue(calculatedValue, c);
 
     return calculatedValue;

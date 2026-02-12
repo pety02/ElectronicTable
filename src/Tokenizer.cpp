@@ -1,5 +1,5 @@
 //
-// Created by User on 1/20/2026.
+// Created by Petya Licheva on 1/20/2026.
 //
 
 #include "Tokenizer.h"
@@ -127,9 +127,21 @@ Token Tokenizer::next() {
         return {TokenType::End, ""};
     }
 
-    if (auto t = tokenizeNumber())        return *t;
-    if (auto t = tokenizeCellReference()) return *t;
-    if (auto t = tokenizeIdentifier())    return *t;
+    if (auto t = tokenizeNumber()) {
+        Token temp(t->type,t->lexeme);
+        delete t;
+        return temp;
+    }
+    if (auto t = tokenizeCellReference()) {
+        Token temp(t->type,t->lexeme);
+        delete t;
+        return temp;
+    }
+    if (auto t = tokenizeIdentifier())    {
+        Token temp(t->type,t->lexeme);
+        delete t;
+        return temp;
+    }
 
     return tokenizeOperator();
 }
