@@ -4,6 +4,8 @@
 >
 > The project was developed as part of the Data Structures course at the Faculty of Mathematics and Informatics, Sofia University.
 
+<img width="598" height="698" alt="unordered_map drawio" src="https://github.com/user-attachments/assets/0094735b-cec1-4ec5-ad87-21974accdda8" />
+
 ---
 
 # Features
