@@ -144,7 +144,7 @@
 
 # Author
 
-> **Full Name**: Petya Licheva
-> **Faculty**: Faculty of Mathematics and Informatics
-> **University**: Sofia University “St. Kliment Ohridski”
-> **Date**: January 2026
+> - **Full Name**: Petya Licheva
+> - **Faculty**: Faculty of Mathematics and Informatics
+> - **University**: Sofia University “St. Kliment Ohridski”
+> - **Date**: January 2026
